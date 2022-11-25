@@ -1,11 +1,7 @@
 // variables
-const playerBatu = document.getElementById(`player-batu`);
-const playerKertas = document.getElementById(`player-kertas`);
-const playerGunting = document.getElementById(`player-gunting`);
-const comBatu = document.getElementById(`com-batu`);
-const comKertas = document.getElementById(`com-kertas`);
-const comGunting = document.getElementById(`com-gunting`);
 const refresh = document.getElementById(`refresh`);
+const box = document.getElementById(`box`);
+const info = document.getElementById(`info`);
 
 // class permainan
 class Game {
@@ -14,7 +10,7 @@ class Game {
     this.computerName = "COM";
     this.playerOption;
     this.computerOption;
-    this.winner = "";
+    this.winner;
   }
 
   get getPlayerOption() {
@@ -33,17 +29,70 @@ class Game {
     this.computerOption = option;
   }
 
-  // com random choice
   comRandom() {
-    let choices = ["batu", "kertas", "gunting"];
-    let i = Math.floor(Math.random() * choices.length);
-    return choices[i];
+    const options = ["batu", "kertas", "gunting"];
+    const i = Math.floor(Math.random() * options.length);
+    this.setComputerOption = options[i];
+    return options[i];
+  }
+
+  winCalculation() {
+    let player = this.playerOption;
+    let com = this.computerOption;
+    if (player == com) {
+      return "Draw!";
+    }
+    if (player == "batu") {
+      return com == "gunting" ? "Player 1 Win!" : "COM Win!";
+    }
+    if (player == "kertas") {
+      return com == "batu" ? "Player 1 Win!" : "COM Win!";
+    }
+    if (player == "gunting") {
+      return com == "kertas" ? "Player 1 Win!" : "COM Win!";
+    }
+  }
+
+  winnerIs() {
+    if (this.winCalculation() == "Player 1 Win!") {
+      return "Player 1";
+    }
   }
 }
 
 function pickOption(params) {
   const game = new Game();
+  let result = "";
+
+  // get data
   game.setPlayerOption = params;
-  console.log(game.getPlayerOption);
-  console.log(`Kamu memilih ` + params);
+  game.setComputerOption = game.comRandom();
+
+  // process data
+  result = game.winCalculation();
+
+  // check
+  console.log(`Kamu memilih ` + game.getPlayerOption);
+  console.log(`Computer memilih ` + game.getComputerOption);
+  console.log(result);
+
+  // show winner
+  if (result == "Player 1 Win!") {
+    box.classList.add("box");
+    info.classList.add("info");
+    info.innerHTML = result;
+  } else if (result == "COM Win!") {
+    box.classList.add("box");
+    info.classList.add("info");
+    info.innerHTML = result;
+  } else {
+    box.classList.add("draw-box");
+    info.classList.add("info");
+    info.innerHTML = result;
+  }
 }
+
+// refresh
+refresh.addEventListener("click", function () {
+  window.location.reload();
+});

@@ -110,6 +110,13 @@ main {
 #versus img {
   width: 77px;
   height: 71px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+#versus img:hover {
+  transform: rotate(90deg);
+  scale: 1.5;
 }
 
 button {
@@ -128,16 +135,47 @@ button {
 
 #player-options > button {
   cursor: pointer;
+  transition: 0.2s ease-in-out;
 }
 
 #player-options > button:hover {
   transform: rotate(20deg);
-  animation: 1s ease;
+  scale: 1.3;
 }
 
 button > img {
   width: 128px;
   height: 92px;
+}
+
+/* Show Winner */
+.box {
+  background: #4c9654;
+  border-radius: 10px;
+  transform: rotate(-28.87deg);
+  width: 271.11px;
+  height: 166.93px;
+}
+
+.draw-box {
+  width: 271.11px;
+  height: 166.93px;
+  background: #035b0c;
+  border-radius: 10px;
+  transform: rotate(-28.87deg);
+}
+
+.info {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 52px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  padding-top: 2.2rem;
 }
 
 /* media queries */
