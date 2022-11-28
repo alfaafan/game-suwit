@@ -1,16 +1,66 @@
-// variables
-const refresh = document.getElementById(`refresh`);
-const box = document.getElementById(`box`);
-const info = document.getElementById(`info`);
-
 // class permainan
 class Game {
   constructor() {
-    this.playerName = "Player 1";
-    this.computerName = "COM";
+    this.playerName;
+    this.computerName;
     this.playerOption;
     this.computerOption;
     this.winner;
+  }
+
+  choose() {}
+
+  changeBackground() {}
+
+  changeInfo(playerOption, computerOption) {
+    const box = document.getElementById(`box`);
+    const info = document.getElementById(`info`);
+    let result = this.winCalculation(playerOption, computerOption);
+
+    if (result == "Player 1 Win!") {
+      box.classList.add("box");
+      info.classList.add("info");
+      info.innerHTML = result;
+    } else if (result == "COM Win!") {
+      box.classList.add("box");
+      info.classList.add("info");
+      info.innerHTML = result;
+    } else {
+      box.classList.add("draw-box");
+      info.classList.add("info");
+      info.innerHTML = result;
+    }
+  }
+
+  winCalculation(playerOption, computerOption) {
+    if (playerOption == computerOption) {
+      return "Draw!";
+    }
+    if (playerOption == "batu") {
+      return computerOption == "gunting" ? "Player 1 Win!" : "COM Win!";
+    }
+    if (playerOption == "kertas") {
+      return computerOption == "batu" ? "Player 1 Win!" : "COM Win!";
+    }
+    if (playerOption == "gunting") {
+      return computerOption == "kertas" ? "Player 1 Win!" : "COM Win!";
+    }
+  }
+
+  #winnerIs(playerOption, computerOption) {
+    if (this.winCalculation(playerOption, computerOption) == "Player 1 Win!") {
+      return "Player 1";
+    } else if (this.winCalculation(playerOption, computerOption) == "COM Win!") {
+      return "Computer";
+    } else {
+      return "Draw";
+    }
+  }
+}
+
+class Player extends Game {
+  constructor() {
+    super();
   }
 
   get getPlayerOption() {
@@ -21,6 +71,29 @@ class Game {
     this.playerOption = option;
   }
 
+  changeBackground() {
+    const plOptions = document.getElementById("player-options");
+    const playerBatu = document.getElementById("player-batu");
+    const playerKertas = document.getElementById("player-kertas");
+    const playerGunting = document.getElementById("player-gunting");
+
+    plOptions.classList.add("no-cursor");
+
+    if (this.playerOption == "batu") {
+      playerBatu.classList.add("picked");
+    } else if (this.playerOption == "kertas") {
+      playerKertas.classList.add("picked");
+    } else {
+      playerGunting.classList.add("picked");
+    }
+  }
+}
+
+class Computer extends Game {
+  constructor() {
+    super();
+  }
+
   get getComputerOption() {
     return this.computerOption;
   }
@@ -29,70 +102,58 @@ class Game {
     this.computerOption = option;
   }
 
-  comRandom() {
+  choose() {
     const options = ["batu", "kertas", "gunting"];
     const i = Math.floor(Math.random() * options.length);
     this.setComputerOption = options[i];
     return options[i];
   }
 
-  winCalculation() {
-    let player = this.playerOption;
-    let com = this.computerOption;
-    if (player == com) {
-      return "Draw!";
-    }
-    if (player == "batu") {
-      return com == "gunting" ? "Player 1 Win!" : "COM Win!";
-    }
-    if (player == "kertas") {
-      return com == "batu" ? "Player 1 Win!" : "COM Win!";
-    }
-    if (player == "gunting") {
-      return com == "kertas" ? "Player 1 Win!" : "COM Win!";
-    }
-  }
+  changeBackground() {
+    const comOptions = document.getElementById("computer-options");
+    const comBatu = document.getElementById("com-batu");
+    const comKertas = document.getElementById("com-kertas");
+    const comGunting = document.getElementById("com-gunting");
 
-  winnerIs() {
-    if (this.winCalculation() == "Player 1 Win!") {
-      return "Player 1";
+    comOptions.classList.add("no-cursor");
+
+    if (this.computerOption == "batu") {
+      comBatu.classList.add("picked");
+    } else if (this.computerOption == "kertas") {
+      comKertas.classList.add("picked");
+    } else {
+      comGunting.classList.add("picked");
     }
   }
 }
 
+// run program
 function pickOption(params) {
   const game = new Game();
-  let result = "";
+  const player = new Player();
+  const computer = new Computer();
 
   // get data
-  game.setPlayerOption = params;
-  game.setComputerOption = game.comRandom();
+  player.setPlayerOption = params;
+  computer.setComputerOption = computer.choose();
 
-  // process data
-  result = game.winCalculation();
+  // win calculation
+  game.winCalculation(player.getPlayerOption, computer.getComputerOption);
+
+  // change bg info
+  player.changeBackground();
+  computer.changeBackground();
+  game.changeInfo(player.getPlayerOption, computer.getComputerOption);
 
   // check
-  console.log(`Kamu memilih ` + game.getPlayerOption);
-  console.log(`Computer memilih ` + game.getComputerOption);
-  console.log(result);
-
-  // show winner
-  if (result == "Player 1 Win!") {
-    box.classList.add("box");
-    info.classList.add("info");
-    info.innerHTML = result;
-  } else if (result == "COM Win!") {
-    box.classList.add("box");
-    info.classList.add("info");
-    info.innerHTML = result;
-  } else {
-    box.classList.add("draw-box");
-    info.classList.add("info");
-    info.innerHTML = result;
-  }
+  console.log(`Kamu memilih ` + player.getPlayerOption);
+  console.log(`Computer memilih ` + computer.getComputerOption);
+  console.log(game.winCalculation(player.getPlayerOption, computer.getComputerOption));
 }
 
 // refresh
+const refresh = document.getElementById(`refresh`);
+
 refresh.addEventListener("click", function () {
   window.location.reload();
 });
