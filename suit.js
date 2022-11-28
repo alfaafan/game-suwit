@@ -8,10 +8,6 @@ class Game {
     this.winner;
   }
 
-  choose() {}
-
-  changeBackground() {}
-
   changeInfo(playerOption, computerOption) {
     const box = document.getElementById(`box`);
     const info = document.getElementById(`info`);
